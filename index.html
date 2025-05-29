@@ -4,27 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Title Image</title>
-  
-  <!-- Load Roboto from Google Fonts -->
+
+  <!-- Google Fonts: Roboto -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
- 
+
   <style>
     body {
       margin: 0;
-      background-color: #f4f4f4;
+      padding: 20px;
+      background-color: #ffffff; /* changed to white */
       display: flex;
-      flex-direction: column; /* Make it column layout */
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
       text-align: center;
+      font-family: 'Roboto', sans-serif;
     }
+
     img {
-      max-width: 90%;
+      max-width: 100%;
       height: auto;
       border-radius: 10px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      margin-bottom: 20px; /* Added spacing between images */
+      margin-bottom: 20px;
+    }
+
+    .tagline {
+      font-size: 2.0em;
+      font-weight: 400;
+      color: #333;
+      max-width: 90%;
     }
   </style>
 </head>
@@ -32,9 +40,9 @@
   <!-- First Image -->
   <img src="mergeCollage.png" alt="Title Image">
 
-  <!-- Optional Caption for Second Image -->
-  <p style="margin-top: 14px; font-size: 1.1em;">
-    <strong>Loving care for your pets while you're away!</strong>
+  <!-- Tagline -->
+  <p class="tagline">
+    <strong>Loving care for your family — even when you’re away.</strong>
   </p>
 </body>
 </html>
