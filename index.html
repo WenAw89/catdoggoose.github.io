@@ -38,10 +38,10 @@
 
     .calendly-button {
   display: inline-block;
-  padding: 12px 24px;
+  padding: 120px 240px;
   background-color: #4CAF50; /* A friendly green */
   color: white;
-  font-size: 1em;
+  font-size: 10em;
   font-weight: 600;
   border: none;
   border-radius: 8px;
@@ -57,7 +57,7 @@
     .slider-container {
   max-width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   margin-bottom: 20px;
@@ -68,7 +68,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
   overflow: hidden;
 }
 
@@ -81,8 +81,9 @@
 .slides img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  flex-shrink: 0;
+  object-fit: fill;
+  overflow: auto;
+  flex-shrink: 3;
 }
 
 .nav {
