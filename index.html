@@ -2,152 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cat, Dog, Goose Pet Sitting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Title Image</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
       margin: 0;
-      padding: 20px;
-      background-color: #f7f7f7;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    fieldset {
-      border: 1px solid #ddd;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .note {
-      color: #d9534f;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    .payment-info {
-      text-align: center;
-      margin-top: 30px;
-      font-weight: bold;
-    }
-    button {
-      display: block;
-      margin: 20px auto 0;
-      padding: 10px 20px;
-      background-color: #5cb85c;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #4cae4c;
+    img {
+      max-width: 90%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
 <body>
-
-  <!-- Image Section -->
-<div style="text-align: center; margin-bottom: 30px;">
-  <img src="collage fin.png" alt="Pet sitting banner" style="max-width: 100%; height: auto; border-radius: 8px;">
-  <p style="margin-top: 10px; font-size: 1.1em;"><strong>Trusted care for your furry (or feathered) family!</strong></p>
-</div>
-
-  
-  <div class="container">
-    <h1>Cat, Dog, Goose Pet Sitting</h1>
-    <h2>Booking Form</h2>
-
-    <form action="#" method="POST">
-      <!-- Pet Information -->
-      <fieldset>
-        <legend>🐾 Pet Information</legend>
-        <label for="petName">Pet's Name:</label>
-        <input type="text" id="petName" name="petName" required>
-
-        <label for="petType">Type of Pet:</label>
-        <select id="petType" name="petType" required>
-          <option value="Dog">Dog</option>
-          <option value="Cat">Cat</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label for="petBreed">Breed:</label>
-        <input type="text" id="petBreed" name="petBreed">
-
-        <label for="petAge">Age:</label>
-        <input type="number" id="petAge" name="petAge">
-
-        <label for="petSize">Size:</label>
-        <select id="petSize" name="petSize">
-          <option value="Small">Small</option>
-          <option value="Medium">Medium</option>
-          <option value="Large">Large</option>
-        </select>
-      </fieldset>
-
-      <!-- Booking Details -->
-      <fieldset>
-        <legend>📅 Booking Details</legend>
-        <label for="startDate">Start Date & Time:</label>
-        <input type="datetime-local" id="startDate" name="startDate" required>
-
-        <label for="endDate">End Date & Time:</label>
-        <input type="datetime-local" id="endDate" name="endDate" required>
-
-        <p class="note">Please double-check the start and end dates/times for overnight stays, as calendar tools may not always show them correctly.</p>
-
-        <label for="specialInstructions">Special Instructions:</label>
-        <textarea id="specialInstructions" name="specialInstructions" rows="4"></textarea>
-      </fieldset>
-
-      <!-- Contact Information -->
-      <fieldset>
-        <legend>📞 Contact Information</legend>
-        <label for="ownerName">Your Name:</label>
-        <input type="text" id="ownerName" name="ownerName" required>
-
-        <label for="ownerEmail">Email:</label>
-        <input type="email" id="ownerEmail" name="ownerEmail" required>
-
-        <label for="ownerPhone">Phone Number:</label>
-        <input type="tel" id="ownerPhone" name="ownerPhone" required>
-      </fieldset>
-
-      <!-- Submit Button -->
-      <button type="submit">Submit Booking Request</button>
-    </form>
-
-    <!-- Payment Information -->
-    <div class="payment-info">
-      <p>We accept payments via Cash, Check, or Venmo.</p>
-    </div>
-
-    <!-- Contact Information -->
-    <div class="payment-info">
-      <p>For questions, please call or text: <strong>(336) 525-1338</strong></p>
-    </div>
-  </div>
-
+  <img src="title.jpg" alt="Title Image">
 </body>
 </html>
