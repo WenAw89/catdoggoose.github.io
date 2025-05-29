@@ -9,25 +9,31 @@
       margin: 0;
       background-color: #f4f4f4;
       display: flex;
+      flex-direction: column; /* Make it column layout */
       justify-content: center;
       align-items: center;
       height: 100vh;
+      text-align: center;
     }
     img {
       max-width: 90%;
       height: auto;
       border-radius: 10px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px; /* Added spacing between images */
     }
   </style>
 </head>
 <body>
+  <!-- First Image -->
   <img src="title.jpg" alt="Title Image">
 
-  <!-- Image Section -->
-<div style="text-align: center; margin-bottom: 30px;">
-  <img src="collage fin.png" alt="Pet sitting banner" style="max-width: 100%; height: auto; border-radius: 8px;">
-  <p style="margin-top: 10px; font-size: 1.1em;"><strong>Loving care for your pets while you're away!</strong></p>
-</div>
+  <!-- Second Image Section -->
+  <img src="collage_fin.png" alt="Collage of pets">
+  
+  <!-- Optional Caption for Second Image -->
+  <p style="margin-top: 10px; font-size: 1.1em;">
+    <strong>Loving care for your pets while you're away!</strong>
+  </p>
 </body>
 </html>
