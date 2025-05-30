@@ -1,72 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Title Image</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Carousel</title>
 
-  <!-- Google Fonts: Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 8px;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      padding: 16px;
       font-family: 'Roboto', sans-serif;
+      background-color: #ffffff;
+      text-align: center;
     }
 
     img {
-      max-width: 70%;
+      max-width: 100%;
       height: auto;
       object-fit: contain;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
 
- .calendly-button {
-  display: inline-block;
-  padding: 1rem 2rem;
-  background-color: #000000;
-  color: white;
-  font-size: 1.5rem; /* responsive size */
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  text-decoration: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
-  margin: 2rem 0;
-  max-width: 90%;
-  width: auto;
-  text-align: center;
-  white-space: nowrap;
-}
+    .calendly-button {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background-color: #000000;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+      margin: 2rem 0;
+      max-width: 90%;
+      text-align: center;
+      white-space: nowrap;
+    }
 
-/* Optional: Adjust further on very small screens */
-@media (max-width: 480px) {
-  .calendly-button {
-    font-size: 1.2rem;
-    padding: 0.75rem 1.5rem;
-  }
-}
-
-.calendly-button:hover {
-  background-color: #222222;
-}
+    .calendly-button:hover {
+      background-color: #222222;
+    }
 
     .carousel-container {
       width: 100%;
-      max-width: 100%;
       overflow: hidden;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      margin-bottom: 12px;
+      margin-bottom: 20px;
       background: white;
     }
 
@@ -76,7 +67,7 @@
     }
 
     .carousel-track img {
-      width: 100px; /* 300px / 3 */
+      width: 100px;
       height: auto;
       flex-shrink: 0;
       object-fit: contain;
@@ -85,18 +76,58 @@
     }
 
     @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .calendly-button {
+        font-size: 1.2rem;
+        padding: 0.75rem 1.5rem;
+      }
+
+      .carousel-track img {
+        width: 80px;
+        padding: 3px;
+      }
+
+      img {
+        margin-bottom: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .calendly-button {
+        font-size: 1rem;
+        padding: 0.6rem 1rem;
+      }
+
+      .carousel-track img {
+        width: 70px;
+        padding: 2px;
+      }
+
+      body {
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Hero Image -->
+  <img src="mergeCollage.png" alt="Title Image" />
 
-  <!-- First Image -->
-  <img src="mergeCollage.png" alt="Title Image">
-
-  <!-- Schedule Button -->
-  <a href="https://calendly.com/catdoggoose01/30min" target="_blank" class="calendly-button">
+  <!-- Call to Action -->
+  <a
+    href="https://calendly.com/catdoggoose01/30min"
+    target="_blank"
+    class="calendly-button"
+  >
     Schedule a Visit
   </a>
 
@@ -104,52 +135,51 @@
   <div class="carousel-container">
     <div class="carousel-track">
       <!-- Original 21 images -->
-      <img src="image1.jpg" alt="Slide 1">
-      <img src="image2.jpeg" alt="Slide 2">
-      <img src="image3.jpg" alt="Slide 3">
-      <img src="image4.jpg" alt="Slide 4">
-      <img src="image5.jpg" alt="Slide 5">
-      <img src="image6.jpg" alt="Slide 6">
-      <img src="image7.jpg" alt="Slide 7">
-      <img src="image8.jpg" alt="Slide 8">
-      <img src="image9.jpg" alt="Slide 9">
-      <img src="image10.jpg" alt="Slide 10">
-      <img src="image11.jpeg" alt="Slide 11">
-      <img src="image12.jpeg" alt="Slide 12">
-      <img src="image13.jpg" alt="Slide 13">
-      <img src="image14.jpg" alt="Slide 14">
-      <img src="image15.jpg" alt="Slide 15">
-      <img src="image16.jpg" alt="Slide 16">
-      <img src="image17.jpg" alt="Slide 17">
-      <img src="image18.jpeg" alt="Slide 18">
-      <img src="image19.jpeg" alt="Slide 19">
-      <img src="image20.jpg" alt="Slide 20">
-      <img src="image21.jpg" alt="Slide 21">
-      
-      <!-- Duplicate images for looping -->
-      <img src="image1.jpg" alt="Slide 1">
-      <img src="image2.jpeg" alt="Slide 2">
-      <img src="image3.jpg" alt="Slide 3">
-      <img src="image4.jpg" alt="Slide 4">
-      <img src="image5.jpg" alt="Slide 5">
-      <img src="image6.jpg" alt="Slide 6">
-      <img src="image7.jpg" alt="Slide 7">
-      <img src="image8.jpg" alt="Slide 8">
-      <img src="image9.jpg" alt="Slide 9">
-      <img src="image10.jpg" alt="Slide 10">
-      <img src="image11.jpeg" alt="Slide 11">
-      <img src="image12.jpeg" alt="Slide 12">
-      <img src="image13.jpg" alt="Slide 13">
-      <img src="image14.jpg" alt="Slide 14">
-      <img src="image15.jpg" alt="Slide 15">
-      <img src="image16.jpg" alt="Slide 16">
-      <img src="image17.jpg" alt="Slide 17">
-      <img src="image18.jpeg" alt="Slide 18">
-      <img src="image19.jpeg" alt="Slide 19">
-      <img src="image20.jpg" alt="Slide 20">
-      <img src="image21.jpg" alt="Slide 21">
+      <img src="image1.jpg" alt="Slide 1" />
+      <img src="image2.jpeg" alt="Slide 2" />
+      <img src="image3.jpg" alt="Slide 3" />
+      <img src="image4.jpg" alt="Slide 4" />
+      <img src="image5.jpg" alt="Slide 5" />
+      <img src="image6.jpg" alt="Slide 6" />
+      <img src="image7.jpg" alt="Slide 7" />
+      <img src="image8.jpg" alt="Slide 8" />
+      <img src="image9.jpg" alt="Slide 9" />
+      <img src="image10.jpg" alt="Slide 10" />
+      <img src="image11.jpeg" alt="Slide 11" />
+      <img src="image12.jpeg" alt="Slide 12" />
+      <img src="image13.jpg" alt="Slide 13" />
+      <img src="image14.jpg" alt="Slide 14" />
+      <img src="image15.jpg" alt="Slide 15" />
+      <img src="image16.jpg" alt="Slide 16" />
+      <img src="image17.jpg" alt="Slide 17" />
+      <img src="image18.jpeg" alt="Slide 18" />
+      <img src="image19.jpeg" alt="Slide 19" />
+      <img src="image20.jpg" alt="Slide 20" />
+      <img src="image21.jpg" alt="Slide 21" />
+
+      <!-- Duplicates for infinite scroll -->
+      <img src="image1.jpg" alt="Slide 1" />
+      <img src="image2.jpeg" alt="Slide 2" />
+      <img src="image3.jpg" alt="Slide 3" />
+      <img src="image4.jpg" alt="Slide 4" />
+      <img src="image5.jpg" alt="Slide 5" />
+      <img src="image6.jpg" alt="Slide 6" />
+      <img src="image7.jpg" alt="Slide 7" />
+      <img src="image8.jpg" alt="Slide 8" />
+      <img src="image9.jpg" alt="Slide 9" />
+      <img src="image10.jpg" alt="Slide 10" />
+      <img src="image11.jpeg" alt="Slide 11" />
+      <img src="image12.jpeg" alt="Slide 12" />
+      <img src="image13.jpg" alt="Slide 13" />
+      <img src="image14.jpg" alt="Slide 14" />
+      <img src="image15.jpg" alt="Slide 15" />
+      <img src="image16.jpg" alt="Slide 16" />
+      <img src="image17.jpg" alt="Slide 17" />
+      <img src="image18.jpeg" alt="Slide 18" />
+      <img src="image19.jpeg" alt="Slide 19" />
+      <img src="image20.jpg" alt="Slide 20" />
+      <img src="image21.jpg" alt="Slide 21" />
     </div>
   </div>
-
 </body>
 </html>
