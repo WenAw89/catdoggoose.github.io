@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>House Sitting Booking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    h2 {
+      text-align: center;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+    .day {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .day.selected {
+      background-color: #007aff;
+      color: white;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    input, textarea, select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>Select House Sitting Dates</h2>
+  <div id="calendar" class="calendar"></div>
+  <button id="toForm">Next: Time and Contact Info</button>
+
+  <form id="bookingForm" class="form-container hidden">
+    <h2>Contact Info</h2>
+    <label for="name">Full Name *</label>
+    <input id="name" type="text" required />
+
+    <label for="email">Email *</label>
+    <input id="email" type="email" required />
+
+    <label for="phone">Phone Number *</label>
+    <input id="phone" type="tel" required />
+
+    <label for="address">Address *</label>
+    <input id="address" type="text" required />
+
+    <label for="pets">Tell me about your pets</label>
+    <textarea id="pets" rows="4" placeholder="Name, type, routine, behavior..."></textarea>
+
+    <label>Start Time *</label>
+    <select id="startTime" required>
+      <option value="">Select start time</option>
+      <option>Morning (7–9am)</option>
+      <option>Afternoon (12–2pm)</option>
+      <option>Evening (4–6pm)</option>
+    </select>
+
+    <label>End Time *</label>
+    <select id="endTime" required>
+      <option value="">Select end time</option>
+      <option>Morning (7–9am)</option>
+      <option>Afternoon (12–2pm)</option>
+      <option>Evening (4–6pm)</option>
+    </select>
+
+    <label>Selected Range</label>
+    <textarea id="summary" rows="3" readonly></textarea>
+
+    <button type="submit">Submit Booking</button>
+  </form>
+
+  <script>
+    const calendar = document.getElementById('calendar');
+    const toFormBtn = document.getElementById('toForm');
+    const bookingForm = document.getElementById('bookingForm');
+    const summary = document.getElementById('summary');
+
+    let startDate = null;
+    let endDate = null;
+
+    let currentYear, currentMonth;
+
+    function generateCalendar(year, month) {
+      currentYear = year;
+      currentMonth = month;
+      calendar.innerHTML = '';
+
+      const nav = document.createElement('div');
+      nav.style.display = 'flex';
+      nav.style.justifyContent = 'space-between';
+      nav.style.alignItems = 'center';
+      nav.style.marginBottom = '10px';
+
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '← Previous';
+      prevBtn.onclick = () => {
+        let newMonth = currentMonth - 1;
+        let newYear = currentYear;
+        if (newMonth < 0) {
+          newMonth = 11;
+          newYear--;
+        }
+        generateCalendar(newYear, newMonth);
+      };
+
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = 'Next →';
+      nextBtn.onclick = () => {
+        let newMonth = currentMonth + 1;
+        let newYear = currentYear;
+        if (newMonth > 11) {
+          newMonth = 0;
+          newYear++;
+        }
+        generateCalendar(newYear, newMonth);
+      };
+
+      const monthName = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+      const title = document.createElement('h3');
+      title.textContent = monthName;
+      title.style.margin = '0 auto';
+
+      nav.appendChild(prevBtn);
+      nav.appendChild(title);
+      nav.appendChild(nextBtn);
+      calendar.appendChild(nav);
+
+      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const daysHeader = document.createElement('div');
+      daysHeader.className = 'calendar-grid';
+      daysHeader.style.fontWeight = 'bold';
+      daysOfWeek.forEach(day => {
+        const d = document.createElement('div');
+        d.textContent = day;
+        daysHeader.appendChild(d);
+      });
+      calendar.appendChild(daysHeader);
+
+      const grid = document.createElement('div');
+      grid.className = 'calendar-grid';
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const startDay = new Date(year, month, 1).getDay();
+
+      for (let i = 0; i < startDay; i++) {
+        grid.appendChild(document.createElement('div'));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'day';
+        dayDiv.textContent = d;
+
+        const fullDate = new Date(year, month, d);
+        const iso = fullDate.toISOString().split('T')[0];
+
+        if (isInRange(fullDate)) {
+          dayDiv.classList.add('selected');
+        }
+
+        dayDiv.onclick = () => {
+          if (!startDate || (startDate && endDate)) {
+            startDate = fullDate;
+            endDate = null;
+          } else if (fullDate < startDate) {
+            startDate = fullDate;
+          } else {
+            endDate = fullDate;
+          }
+          generateCalendar(currentYear, currentMonth);
+        };
+
+        grid.appendChild(dayDiv);
+      }
+
+      calendar.appendChild(grid);
+    }
+
+    function isInRange(date) {
+      if (!startDate) return false;
+      if (!endDate) return date.toDateString() === startDate.toDateString();
+      return date >= startDate && date <= endDate;
+    }
+
+    toFormBtn.onclick = () => {
+      if (!startDate || !endDate) {
+        alert("Please select a start and end date.");
+        return;
+      }
+      const rangeText = `From ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}`;
+      summary.value = rangeText;
+
+      calendar.classList.add('hidden');
+      toFormBtn.classList.add('hidden');
+      bookingForm.classList.remove('hidden');
+    };
+
+    bookingForm.onsubmit = (e) => {
+      e.preventDefault();
+
+      const name = encodeURIComponent(document.getElementById('name').value);
+      const email = encodeURIComponent(document.getElementById('email').value);
+      const address = encodeURIComponent(document.getElementById('address').value);
+      const phone = encodeURIComponent(document.getElementById('phone').value);
+      const pets = encodeURIComponent(document.getElementById('pets').value);
+      const timeStart = encodeURIComponent(document.getElementById('startTime').value);
+      const timeEnd = encodeURIComponent(document.getElementById('endTime').value);
+      const dateRange = encodeURIComponent(summary.value.trim());
+
+      const baseURL = 'https://docs.google.com/forms/d/e/1FAIpQLSeei3yQ8YRVchlSk5gnQiVmcZTJKfGaf-O4m9fB72FjAqmudQ/viewform?usp=pp_url';
+
+      const url = `${baseURL}` +
+        `&entry.2005620554=${name}` +
+        `&entry.1045781291=${email}` +
+        `&entry.1065046570=${address}` +
+        `&entry.1166974658=${phone}` +
+        `&entry.2080923976=${pets}` +
+        `&entry.839337160=${dateRange}` +
+        `&entry.1234567890=${timeStart}` +
+        `&entry.1234567891=${timeEnd}`; // Replace these entry codes
+
+      window.location.href = url;
+    };
+
+    const today = new Date();
+    generateCalendar(today.getFullYear(), today.getMonth());
+  </script>
+</body>
+</html>
