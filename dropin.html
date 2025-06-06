@@ -174,7 +174,7 @@
   const summary = document.getElementById('summary');
 
   // Your Google Apps Script URL for GET to fetch existing bookings
-  const getBookingsURL = 'https://script.google.com/macros/s/AKfycbxoFd0InU4l_uCeoO94hd6334JsVsZKOaYzmkjIDR7RCyBPfY1lbRYLD_JiPOpAHfFXPw/exec';
+  const getBookingsURL = 'https://script.google.com/macros/s/AKfycbxgrBXOlW5KY8wEoWbOfFerS1kP4jUaWmqTpisbL9SoF7_P_GrryaQl2dIaw54eOh0a/exec';
 
   let selectedDates = new Set();
   let selectedTimes = {};
@@ -363,7 +363,7 @@
       summary: summary.value.trim(),
     };
 
-    fetch('https://script.google.com/macros/s/AKfycbyqKLqWUZWNCitxXSDagx-RKdcLuHpcKks3hBxm4aNZWvdfIFwvb-00HlkIVhJC48ziDQ/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxgrBXOlW5KY8wEoWbOfFerS1kP4jUaWmqTpisbL9SoF7_P_GrryaQl2dIaw54eOh0a/exec', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
