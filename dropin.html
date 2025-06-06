@@ -140,18 +140,10 @@
     .hidden {
       display: none;
     }
-    @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
   </style>
 </head>
 <body>
   <h2>Book a Pet Visit</h2>
-  <div id="loading" style="text-align:center; margin: 1rem 0;">
-  <div style="display: inline-block; border: 4px solid #ccc; border-top: 4px solid #007aff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
-  <div>Loading calendar...</div>
-</div>
   <div id="calendar" class="calendar"></div>
   <button id="toTimeSlots">Next: Select Times</button>
 
@@ -391,20 +383,19 @@
 
   // Fetch booked slots on load
   fetch(getBookingsURL)
-  .then(res => res.json())
-  .then(data => {
-    bookedSlots = data || {};
-    const today = new Date();
-    generateCalendar(today.getFullYear(), today.getMonth());
-    document.getElementById('loading').style.display = 'none';
-  })
-  .catch(err => {
-    console.error('Error fetching booked slots:', err);
-    const today = new Date();
-    generateCalendar(today.getFullYear(), today.getMonth());
-    document.getElementById('loading').style.display = 'none';
-  });
-
+    .then(res => res.json())
+    .then(data => {
+      bookedSlots = data || {};
+      // Initialize calendar with current month
+      const today = new Date();
+      generateCalendar(today.getFullYear(), today.getMonth());
+    })
+    .catch(err => {
+      console.error('Error fetching booked slots:', err);
+      // Still generate calendar even if fetch fails
+      const today = new Date();
+      generateCalendar(today.getFullYear(), today.getMonth());
+    });
 </script>
 </body>
 </html>
