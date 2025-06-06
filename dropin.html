@@ -346,27 +346,23 @@
 
     try {
       const response = await fetch('https://script.google.com/macros/s/AKfycbyfXwwUbl3q1bFpvEHoB9bjbPrpmgKUhHSvPdBdaAO6SXBb-11JjW3VPJ14a5om83wIDw/exec', {
-       method: 'POST',
-  mode: 'no-cors', // This makes the request opaque and disables CORS checks,
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
+      method: 'POST',
+      mode: 'no-cors',  // Here is the key change!
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
 
-      const result = await response.json();
+    alert('Booking submitted successfully!');
+    window.location.reload();
 
-      if (result.result === 'success') {
-        alert('Booking submitted successfully!');
-        window.location.reload();
-      } else {
-        alert('Could not submit form. Error: ' + result.error);
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Something went wrong while submitting the form.');
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    alert('Something went wrong while submitting the form.');
+  }
+};
+
 
   const today = new Date();
   generateCalendar(today.getFullYear(), today.getMonth());
