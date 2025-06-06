@@ -5,7 +5,134 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pet Booking</title>
   <style>
-    /* Styling omitted for brevity - same as before */
+    :root {
+      --primary: #007aff;
+      --secondary: #f0f8ff;
+      --accent: #28a745;
+      --disabled: #ccc;
+      --text-dark: #222;
+      --bg-light: #f9f9fb;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      max-width: 700px;
+    }
+    h2, h3, h4 {
+      text-align: center;
+      margin-top: 1.2rem;
+    }
+    .calendar, .timeslots, .form-container {
+      margin-top: 1rem;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 0.5rem;
+    }
+    .calendar-header div {
+      font-weight: bold;
+      text-align: center;
+    }
+    .day {
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+    .day:hover {
+      background-color: var(--secondary);
+    }
+    .day.selected {
+      background-color: var(--primary);
+      color: white;
+      font-weight: bold;
+    }
+    .day.disabled {
+      background-color: #eee;
+      color: #aaa;
+      pointer-events: none;
+    }
+    .nav-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .nav-button {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .month-label {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 1.5rem 0 0.5rem;
+      padding: 0.8rem;
+      font-size: 1rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .timeslot-section {
+      margin-top: 1.5rem;
+    }
+    .timeslot-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .timeslot {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+    .timeslot:hover {
+      background-color: var(--secondary);
+    }
+    .timeslot.selected {
+      background-color: var(--accent);
+      color: white;
+    }
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    input, textarea {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+    }
+    textarea {
+      resize: vertical;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -39,26 +166,15 @@
     const bookingForm = document.getElementById('bookingForm');
     const summary = document.getElementById('summary');
 
-    const unavailableSlots = {}; // date -> Set of unavailable time strings
     let selectedDates = new Set();
     let selectedTimes = {};
     let currentYear, currentMonth;
-
-    const unavailableScriptURL = "https://script.google.com/macros/s/AKfycbz-DsNbJpzDH2Eo3ogcYGlE8EsgJyRkhyjr7jhXCMwBodtAJq87-F8f1uhwQfjYku9g4g/exec";
-
-    async function fetchUnavailableSlots(dates) {
-      const query = dates.map(d => `dates[]=${encodeURIComponent(d)}`).join('&');
-      const response = await fetch(`${unavailableScriptURL}?${query}`);
-      const data = await response.json();
-      for (const date in data) {
-        unavailableSlots[date] = new Set(data[date]);
-      }
-    }
 
     function generateCalendar(year, month) {
       currentYear = year;
       currentMonth = month;
       calendar.innerHTML = '';
+
       const nav = document.createElement('div');
       nav.className = 'nav-wrapper';
 
@@ -116,7 +232,9 @@
       const now = new Date();
       const buffer = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-      for (let i = 0; i < startDay; i++) grid.appendChild(document.createElement('div'));
+      for (let i = 0; i < startDay; i++) {
+        grid.appendChild(document.createElement('div'));
+      }
 
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
@@ -132,7 +250,6 @@
           day.onclick = () => {
             if (selectedDates.has(dateStr)) {
               selectedDates.delete(dateStr);
-              delete selectedTimes[dateStr];
               day.classList.remove('selected');
             } else {
               selectedDates.add(dateStr);
@@ -174,14 +291,6 @@
           const btn = document.createElement('div');
           btn.className = 'timeslot';
           btn.textContent = time;
-
-          if (unavailableSlots[date]?.has(time)) {
-            btn.style.opacity = 0.5;
-            btn.style.pointerEvents = 'none';
-            btn.style.textDecoration = 'line-through';
-            return list.appendChild(btn);
-          }
-
           if (selectedTimes[date].includes(time)) btn.classList.add('selected');
           btn.onclick = () => {
             const i = selectedTimes[date].indexOf(time);
@@ -201,11 +310,8 @@
       });
     }
 
-    toTimeSlotsBtn.onclick = async () => {
+    toTimeSlotsBtn.onclick = () => {
       if (selectedDates.size === 0) return alert('Please select at least one date.');
-      const datesArray = Array.from(selectedDates);
-      await fetchUnavailableSlots(datesArray);
-
       calendar.classList.add('hidden');
       toTimeSlotsBtn.classList.add('hidden');
       timeslotsDiv.classList.remove('hidden');
@@ -228,23 +334,34 @@
 
     bookingForm.onsubmit = (e) => {
       e.preventDefault();
-      const name = encodeURIComponent(document.getElementById('name').value);
-      const email = encodeURIComponent(document.getElementById('email').value);
-      const address = encodeURIComponent(document.getElementById('address').value);
-      const phone = encodeURIComponent(document.getElementById('phone').value);
-      const pets = encodeURIComponent(document.getElementById('pets').value);
-      const datesTimes = encodeURIComponent(summary.value.trim());
-      const baseURL = 'https://docs.google.com/forms/d/e/1FAIpQLSeei3yQ8YRVchlSk5gnQiVmcZTJKfGaf-O4m9fB72FjAqmudQ/viewform?usp=dialog';
+      const payload = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        pets: document.getElementById('pets').value,
+        summary: summary.value.trim()
+      };
 
-      const url = `${baseURL}` +
-        `&entry.2005620554=${name}` +
-        `&entry.1045781291=${email}` +
-        `&entry.1065046570=${address}` +
-        `&entry.1166974658=${phone}` +
-        `&entry.839337160=${datesTimes}` +
-        `&entry.2080923976=${pets}`;
-
-      window.location.href = url;
+      fetch("https://script.google.com/macros/s/AKfycbzPMxHLZyTrYLinS8322GT3ThP4rrmDd0le0fbjWCrWmwKY668bLKZQZBFHp1V0N1X_LA/exec", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("Booking submitted successfully!");
+          window.location.reload();
+        } else {
+          alert("There was a problem submitting the form.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error: Could not submit form.");
+      });
     };
 
     const today = new Date();
