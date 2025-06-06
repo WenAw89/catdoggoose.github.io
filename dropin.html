@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pet Booking</title>
+  <style>
+    /* Styling omitted for brevity - same as before */
+  </style>
+</head>
+<body>
+  <h2>Book a Pet Visit</h2>
+  <div id="calendar" class="calendar"></div>
+  <button id="toTimeSlots">Next: Select Times</button>
+
+  <div id="timeslots" class="timeslots hidden">
+    <h2>Select Time Slots</h2>
+    <div id="timeslotSections"></div>
+    <button id="toForm">Next: Contact Info</button>
+  </div>
+
+  <form id="bookingForm" class="form-container hidden">
+    <h2>Contact Info</h2>
+    <input id="name" type="text" placeholder="Full Name *" required />
+    <input id="email" type="email" placeholder="Email *" required />
+    <input id="phone" type="tel" placeholder="Phone Number *" required />
+    <input id="address" type="text" placeholder="Address *" required />
+    <textarea id="pets" rows="4" placeholder="Tell me about your pets..."></textarea>
+    <textarea id="summary" rows="4" readonly></textarea>
+    <button type="submit">Submit Booking</button>
+  </form>
+
+  <script>
+    const calendar = document.getElementById('calendar');
+    const toTimeSlotsBtn = document.getElementById('toTimeSlots');
+    const timeslotsDiv = document.getElementById('timeslots');
+    const timeslotSections = document.getElementById('timeslotSections');
+    const toFormBtn = document.getElementById('toForm');
+    const bookingForm = document.getElementById('bookingForm');
+    const summary = document.getElementById('summary');
+
+    const unavailableSlots = {}; // date -> Set of unavailable time strings
+    let selectedDates = new Set();
+    let selectedTimes = {};
+    let currentYear, currentMonth;
+
+    const unavailableScriptURL = "https://script.google.com/macros/s/AKfycbz-DsNbJpzDH2Eo3ogcYGlE8EsgJyRkhyjr7jhXCMwBodtAJq87-F8f1uhwQfjYku9g4g/exec";
+
+    async function fetchUnavailableSlots(dates) {
+      const query = dates.map(d => `dates[]=${encodeURIComponent(d)}`).join('&');
+      const response = await fetch(`${unavailableScriptURL}?${query}`);
+      const data = await response.json();
+      for (const date in data) {
+        unavailableSlots[date] = new Set(data[date]);
+      }
+    }
+
+    function generateCalendar(year, month) {
+      currentYear = year;
+      currentMonth = month;
+      calendar.innerHTML = '';
+      const nav = document.createElement('div');
+      nav.className = 'nav-wrapper';
+
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '←';
+      prevBtn.className = 'nav-button';
+      prevBtn.onclick = () => {
+        let newMonth = currentMonth - 1;
+        let newYear = currentYear;
+        if (newMonth < 0) {
+          newMonth = 11;
+          newYear--;
+        }
+        generateCalendar(newYear, newMonth);
+      };
+
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = '→';
+      nextBtn.className = 'nav-button';
+      nextBtn.onclick = () => {
+        let newMonth = currentMonth + 1;
+        let newYear = currentYear;
+        if (newMonth > 11) {
+          newMonth = 0;
+          newYear++;
+        }
+        generateCalendar(newYear, newMonth);
+      };
+
+      const title = document.createElement('div');
+      title.className = 'month-label';
+      title.textContent = new Date(year, month).toLocaleString('default', {
+        month: 'long',
+        year: 'numeric',
+      });
+
+      nav.appendChild(prevBtn);
+      nav.appendChild(title);
+      nav.appendChild(nextBtn);
+      calendar.appendChild(nav);
+
+      const grid = document.createElement('div');
+      grid.className = 'calendar-grid';
+
+      const headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      headers.forEach(h => {
+        const el = document.createElement('div');
+        el.className = 'calendar-header';
+        el.textContent = h;
+        grid.appendChild(el);
+      });
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const startDay = new Date(year, month, 1).getDay();
+      const now = new Date();
+      const buffer = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+      for (let i = 0; i < startDay; i++) grid.appendChild(document.createElement('div'));
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        const dateStr = date.toISOString().split('T')[0];
+        const day = document.createElement('div');
+        day.className = 'day';
+        day.textContent = d;
+
+        if (date < buffer) {
+          day.classList.add('disabled');
+        } else {
+          if (selectedDates.has(dateStr)) day.classList.add('selected');
+          day.onclick = () => {
+            if (selectedDates.has(dateStr)) {
+              selectedDates.delete(dateStr);
+              delete selectedTimes[dateStr];
+              day.classList.remove('selected');
+            } else {
+              selectedDates.add(dateStr);
+              day.classList.add('selected');
+            }
+          };
+        }
+
+        grid.appendChild(day);
+      }
+
+      calendar.appendChild(grid);
+    }
+
+    function generateTimeBlocks() {
+      const blocks = [];
+      for (let hour = 7; hour < 20; hour++) {
+        blocks.push(`${String(hour).padStart(2, '0')}:00`);
+        blocks.push(`${String(hour).padStart(2, '0')}:30`);
+      }
+      return blocks;
+    }
+
+    function renderTimeSlots() {
+      timeslotSections.innerHTML = '';
+      selectedDates.forEach(date => {
+        const section = document.createElement('div');
+        section.className = 'timeslot-section';
+        const title = document.createElement('h4');
+        title.textContent = `Time slots for ${date}`;
+        section.appendChild(title);
+
+        const list = document.createElement('div');
+        list.className = 'timeslot-list';
+        const blocks = generateTimeBlocks();
+        selectedTimes[date] = selectedTimes[date] || [];
+
+        blocks.forEach(time => {
+          const btn = document.createElement('div');
+          btn.className = 'timeslot';
+          btn.textContent = time;
+
+          if (unavailableSlots[date]?.has(time)) {
+            btn.style.opacity = 0.5;
+            btn.style.pointerEvents = 'none';
+            btn.style.textDecoration = 'line-through';
+            return list.appendChild(btn);
+          }
+
+          if (selectedTimes[date].includes(time)) btn.classList.add('selected');
+          btn.onclick = () => {
+            const i = selectedTimes[date].indexOf(time);
+            if (i > -1) {
+              selectedTimes[date].splice(i, 1);
+              btn.classList.remove('selected');
+            } else {
+              selectedTimes[date].push(time);
+              btn.classList.add('selected');
+            }
+          };
+          list.appendChild(btn);
+        });
+
+        section.appendChild(list);
+        timeslotSections.appendChild(section);
+      });
+    }
+
+    toTimeSlotsBtn.onclick = async () => {
+      if (selectedDates.size === 0) return alert('Please select at least one date.');
+      const datesArray = Array.from(selectedDates);
+      await fetchUnavailableSlots(datesArray);
+
+      calendar.classList.add('hidden');
+      toTimeSlotsBtn.classList.add('hidden');
+      timeslotsDiv.classList.remove('hidden');
+      renderTimeSlots();
+    };
+
+    toFormBtn.onclick = () => {
+      let summaryText = '';
+      for (let date of selectedDates) {
+        if (!selectedTimes[date] || selectedTimes[date].length === 0) {
+          alert(`Please select at least one time for ${date}`);
+          return;
+        }
+        summaryText += `${date}: ${selectedTimes[date].join(', ')}\n`;
+      }
+      timeslotsDiv.classList.add('hidden');
+      bookingForm.classList.remove('hidden');
+      summary.value = summaryText;
+    };
+
+    bookingForm.onsubmit = (e) => {
+      e.preventDefault();
+      const name = encodeURIComponent(document.getElementById('name').value);
+      const email = encodeURIComponent(document.getElementById('email').value);
+      const address = encodeURIComponent(document.getElementById('address').value);
+      const phone = encodeURIComponent(document.getElementById('phone').value);
+      const pets = encodeURIComponent(document.getElementById('pets').value);
+      const datesTimes = encodeURIComponent(summary.value.trim());
+      const baseURL = 'https://docs.google.com/forms/d/e/1FAIpQLSeei3yQ8YRVchlSk5gnQiVmcZTJKfGaf-O4m9fB72FjAqmudQ/viewform?usp=dialog';
+
+      const url = `${baseURL}` +
+        `&entry.2005620554=${name}` +
+        `&entry.1045781291=${email}` +
+        `&entry.1065046570=${address}` +
+        `&entry.1166974658=${phone}` +
+        `&entry.839337160=${datesTimes}` +
+        `&entry.2080923976=${pets}`;
+
+      window.location.href = url;
+    };
+
+    const today = new Date();
+    generateCalendar(today.getFullYear(), today.getMonth());
+  </script>
+</body>
+</html>
