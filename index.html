@@ -40,18 +40,41 @@
       padding: 1.5rem;
       font-size: 1.1rem;
     }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 8px;
-      padding: 1rem;
-    }
-    .gallery img {
+    .carousel-container {
       width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 6px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      margin-bottom: 20px;
+      background: white;
     }
+
+    .carousel-track {
+      display: flex;
+      animation: scroll 60s linear infinite;
+    }
+
+    .carousel-track img {
+      width: 120px;
+      height: auto;
+      flex-shrink: 0;
+      object-fit: contain;
+      padding: 6px;
+      background-color: white;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Media Queries for Responsive Design */
+    @media (max-width: 768px) {
+      .calendly-button {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.2rem;
+      }
+
     footer {
       background: #f0f8ff;
       text-align: center;
