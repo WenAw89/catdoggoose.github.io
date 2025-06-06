@@ -145,7 +145,7 @@
 <body>
   <h2>Book a Pet Visit</h2>
   <div id="calendar" class="calendar"></div>
- <button id="toTimeSlots" class="hidden">Select Time Slots</button>
+  <button id="toTimeSlots" class="hidden">Select Time Slots</button>
 
   <div id="timeslots" class="timeslots hidden">
     <h2>Select Time Slots</h2>
@@ -164,9 +164,6 @@
     <button type="submit">Submit Booking</button>
   </form>
 
-<!-- TRUNCATED FOR LENGTH -->
-<!-- The head and style remain unchanged -->
-
 <script>
   const calendar = document.getElementById('calendar');
   const toTimeSlotsBtn = document.getElementById('toTimeSlots');
@@ -176,13 +173,13 @@
   const bookingForm = document.getElementById('bookingForm');
   const summary = document.getElementById('summary');
 
-  const getBookingsURL = 'https://script.google.com/macros/s/AKfycbxgrBXOlW5KY8wEoWbOfFerS1kP4jUaWmqTpisbL9SoF7_P_GrryaQl2dIaw54eOh0a/exec';
-  const postBookingURL = 'https://script.google.com/macros/s/AKfycbzPMxHLZyTrYLinS8322GT3ThP4rrmDd0le0fbjWCrWmwKY668bLKZQZBFHp1V0N1X_LA/exec';
+  const getBookingsURL = 'YOUR_GET_URL';
+  const postBookingURL = 'YOUR_POST_URL';
 
   let selectedDates = new Set();
   let selectedTimes = {};
   let currentYear, currentMonth;
-  let bookedSlots = {};  // { "YYYY-MM-DD": ["07:00", "07:30", ...], ... }
+  let bookedSlots = {};
 
   function generateTimeBlocks() {
     const blocks = [];
@@ -205,12 +202,8 @@
     prevBtn.textContent = '←';
     prevBtn.className = 'nav-button';
     prevBtn.onclick = () => {
-      let newMonth = currentMonth - 1;
-      let newYear = currentYear;
-      if (newMonth < 0) {
-        newMonth = 11;
-        newYear--;
-      }
+      const newMonth = (month - 1 + 12) % 12;
+      const newYear = newMonth === 11 ? year - 1 : year;
       generateCalendar(newYear, newMonth);
     };
 
@@ -218,21 +211,14 @@
     nextBtn.textContent = '→';
     nextBtn.className = 'nav-button';
     nextBtn.onclick = () => {
-      let newMonth = currentMonth + 1;
-      let newYear = currentYear;
-      if (newMonth > 11) {
-        newMonth = 0;
-        newYear++;
-      }
+      const newMonth = (month + 1) % 12;
+      const newYear = newMonth === 0 ? year + 1 : year;
       generateCalendar(newYear, newMonth);
     };
 
     const title = document.createElement('div');
     title.className = 'month-label';
-    title.textContent = new Date(year, month).toLocaleString('default', {
-      month: 'long',
-      year: 'numeric',
-    });
+    title.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
 
     nav.appendChild(prevBtn);
     nav.appendChild(title);
@@ -242,8 +228,7 @@
     const grid = document.createElement('div');
     grid.className = 'calendar-grid';
 
-    const headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    headers.forEach(h => {
+    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(h => {
       const el = document.createElement('div');
       el.className = 'calendar-header';
       el.textContent = h;
@@ -253,8 +238,7 @@
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const startDay = new Date(year, month, 1).getDay();
     const now = new Date();
-    const buffer = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24-hour buffer
-
+    const buffer = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     const allBlocks = generateTimeBlocks();
 
     for (let i = 0; i < startDay; i++) {
@@ -274,24 +258,19 @@
         day.classList.add('disabled');
       } else {
         if (selectedDates.has(dateStr)) day.classList.add('selected');
-       day.onclick = () => {
-  if (selectedDates.has(dateStr)) {
-    selectedDates.delete(dateStr);
-    day.classList.remove('selected');
-    delete selectedTimes[dateStr];
-  } else {
-    selectedDates.add(dateStr);
-    day.classList.add('selected');
-  }
-
-  // Show or hide "Select Time Slots" button based on selection
-  if (selectedDates.size > 0) {
-    toTimeSlotsBtn.classList.remove('hidden');
-  } else {
-    toTimeSlotsBtn.classList.add('hidden');
-  }
-};
-
+        day.onclick = () => {
+          if (selectedDates.has(dateStr)) {
+            selectedDates.delete(dateStr);
+            delete selectedTimes[dateStr];
+            day.classList.remove('selected');
+          } else {
+            selectedDates.add(dateStr);
+            day.classList.add('selected');
+          }
+          // toggle visibility of button
+          toTimeSlotsBtn.classList.toggle('hidden', selectedDates.size === 0);
+        };
+      }
 
       grid.appendChild(day);
     }
@@ -319,7 +298,7 @@
         btn.className = 'timeslot';
         btn.textContent = time;
 
-        if (bookedSlots[date] && bookedSlots[date].includes(time)) {
+        if (bookedSlots[date]?.includes(time)) {
           btn.classList.add('disabled');
         } else {
           if (selectedTimes[date].includes(time)) btn.classList.add('selected');
@@ -354,7 +333,7 @@
   toFormBtn.onclick = () => {
     let summaryText = '';
     for (let date of selectedDates) {
-      if (!selectedTimes[date] || selectedTimes[date].length === 0) {
+      if (!selectedTimes[date]?.length) {
         alert(`Please select at least one time for ${date}`);
         return;
       }
@@ -367,7 +346,6 @@
 
   bookingForm.onsubmit = (e) => {
     e.preventDefault();
-
     const data = {
       name: document.getElementById('name').value.trim(),
       email: document.getElementById('email').value.trim(),
@@ -381,15 +359,13 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       mode: 'no-cors',
-      body: JSON.stringify(data)
-    })
-    .then(() => {
+      body: JSON.stringify(data),
+    }).then(() => {
       alert('Booking submitted! Thank you.');
       window.location.reload();
-    })
-    .catch((err) => {
+    }).catch(err => {
       console.error('Submission error:', err);
-      alert('There was an error submitting the form. Please try again.');
+      alert('There was an error submitting the form.');
     });
   };
 
@@ -406,6 +382,5 @@
       generateCalendar(today.getFullYear(), today.getMonth());
     });
 </script>
-
 </body>
 </html>
