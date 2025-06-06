@@ -4,49 +4,105 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cat Dog Goose - Pet Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: #fff;
+      background: #ffffff;
       color: #333;
-      line-height: 1.6;
     }
+
     header {
       background: #007aff;
       color: white;
       padding: 1rem;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
     }
-    header nav > a {
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-title img {
+      height: 60px;
+      margin-right: 1rem;
+    }
+
+    .logo-title h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
       color: white;
       margin: 0 1rem;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
     }
+
     .hero {
-      padding: 2rem;
       text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
     }
-    .hero h1 {
+
+    .hero h2 {
+      font-size: 2rem;
       margin-bottom: 0.5rem;
+      color: #222;
     }
+
     .hero p {
       font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
     }
+
+    .rates {
+      background-color: #f9f9fb;
+      padding: 2rem 1rem;
+    }
+
+    .rates h2 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 1rem;
+    }
+
+    .rates ul {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+    }
+
+    .rates li {
+      margin-bottom: 0.75rem;
+    }
+
     .contact {
       text-align: center;
-      padding: 1.5rem;
+      padding: 2rem 1rem;
       font-size: 1.1rem;
     }
+
     .carousel-container {
       width: 100%;
       overflow: hidden;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      margin-bottom: 20px;
-      background: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
     }
 
     .carousel-track {
@@ -56,9 +112,8 @@
 
     .carousel-track img {
       width: 120px;
-      height: auto;
       flex-shrink: 0;
-      object-fit: contain;
+      object-fit: cover;
       padding: 6px;
       background-color: white;
     }
@@ -68,13 +123,6 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* Media Queries for Responsive Design */
-    @media (max-width: 768px) {
-      .calendly-button {
-        font-size: 1.2rem;
-        padding: 0.8rem 1.2rem;
-      }
-
     footer {
       background: #f0f8ff;
       text-align: center;
@@ -82,105 +130,79 @@
       font-size: 0.9rem;
       color: #555;
     }
-    a.button {
-      display: inline-block;
-      margin: 1rem 0.5rem;
-      padding: 0.8rem 1.5rem;
-      background: #007aff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-    a.button:hover {
-      background: #005fcc;
+
+    @media (max-width: 768px) {
+      .logo-title h1 {
+        font-size: 1.5rem;
+      }
+
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        text-align: center;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 0.5rem;
+      }
     }
   </style>
 </head>
 <body>
+
   <header>
+    <div class="logo-title">
+      <img src="catdoggoose.png" alt="Cat Dog Goose Logo" />
+      <h1>Cat, Dog, Goose</h1>
+    </div>
     <nav>
       <a href="/dropin.html">Book Drop‑In Visit</a>
       <a href="/housesitting.html">Book House Sitting</a>
     </nav>
   </header>
 
-  <!-- Add this right below the .hero div -->
-<div class="rates" style="padding: 2rem; background-color: #f9f9fb;">
-  <h2 style="text-align: center; color: #222;">Rates</h2>
-  <ul style="list-style: none; padding: 0; max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
-    <li><strong>Meet and Greet:</strong> Free</li>
-    <li><strong>Drop-in Visits (dogs and/or mixed pets):</strong> $25 first pet, +$10 per additional pet</li>
-    <li><strong>Drop-in Visits (cats only):</strong> $20 first cat, +$10 per additional cat</li>
-    <li><strong>House-sitting:</strong> $65 first pet, +$20 per additional pet</li>
-    <li><strong>Constant Overnight Care:</strong> $140 per night</li>
-  </ul>
-</div>
-
   <div class="hero">
-  <h1>Give your pet a vacation!</h1>
-   If you have any questions or concerns, please reach out. We will get back to you soon!</p>
-  <p>
-    Send us an <a href="mailto:catdoggoose01@gmail.com" style="color: #007BFF; text-decoration: none;">email</a>, text, or call ‪(336) 525-1338
-  </p>
-</footer>
-
-
-  <!-- Carousel -->
-  <div class="carousel-container">
-    <div class="carousel-track">
-      <!-- Images - can duplicate to ensure looping -->
-      <img src="image1.jpg" alt="1" />
-      <img src="image2.jpeg" alt="2" />
-      <img src="image3.jpg" alt="3" />
-      <img src="image4.jpg" alt="4" />
-      <img src="image5.jpg" alt="5" />
-      <img src="image6.jpg" alt="6" />
-      <img src="image7.jpg" alt="7" />
-      <img src="image8.jpg" alt="8" />
-      <img src="image9.jpg" alt="9" />
-      <img src="image10.jpg" alt="10" />
-      <img src="image11.jpeg" alt="11" />
-      <img src="image12.jpeg" alt="12" />
-      <img src="image13.jpg" alt="13" />
-      <img src="image14.jpg" alt="14" />
-      <img src="image15.jpg" alt="15" />
-      <img src="image16.jpg" alt="16" />
-      <img src="image17.jpg" alt="17" />
-      <img src="image18.jpeg" alt="18" />
-      <img src="image19.jpeg" alt="19" />
-      <img src="image20.jpg" alt="20" />
-      <img src="image21.jpg" alt="21" />
-
-      <!-- Duplicate for infinite scroll -->
-      <img src="image1.jpg" alt="1" />
-      <img src="image2.jpeg" alt="2" />
-      <img src="image3.jpg" alt="3" />
-      <img src="image4.jpg" alt="4" />
-      <img src="image5.jpg" alt="5" />
-      <img src="image6.jpg" alt="6" />
-      <img src="image7.jpg" alt="7" />
-      <img src="image8.jpg" alt="8" />
-      <img src="image9.jpg" alt="9" />
-      <img src="image10.jpg" alt="10" />
-      <img src="image11.jpeg" alt="11" />
-      <img src="image12.jpeg" alt="12" />
-      <img src="image13.jpg" alt="13" />
-      <img src="image14.jpg" alt="14" />
-      <img src="image15.jpg" alt="15" />
-      <img src="image16.jpg" alt="16" />
-      <img src="image17.jpg" alt="17" />
-      <img src="image18.jpeg" alt="18" />
-      <img src="image19.jpeg" alt="19" />
-      <img src="image20.jpg" alt="20" />
-      <img src="image21.jpg" alt="21" />
-    </div>
+    <h2>Give your pet a vacation!</h2>
+    <p>If you have any questions or concerns, please reach out. We will get back to you soon!</p>
   </div>
 
+  <div class="rates">
+    <h2>Rates</h2>
+    <ul>
+      <li><strong>Meet and Greet:</strong> Free</li>
+      <li><strong>Drop-in Visits (dogs and/or mixed pets):</strong> $25 first pet, +$10 per additional pet</li>
+      <li><strong>Drop-in Visits (cats only):</strong> $20 first cat, +$10 per additional cat</li>
+      <li><strong>House-sitting:</strong> $65 first pet, +$20 per additional pet</li>
+      <li><strong>Constant Overnight Care:</strong> $140 per night</li>
+    </ul>
+  </div>
 
+  <div class="contact">
+    <p>
+      Send us an <a href="mailto:catdoggoose01@gmail.com" style="color: #007BFF; text-decoration: none;">email</a>,
+      text, or call ‪(336) 525-1338
+    </p>
+  </div>
 
+  <div class="carousel-container">
+    <div class="carousel-track">
+      <!-- Repeat these as needed -->
+      <img src="image1.jpg" alt="1" />
+      <img src="image2.jpeg" alt="2" />
+      <img src="image3.jpg" alt="3" />
+      <img src="image4.jpg" alt="4" />
+      <!-- Repeat set again for infinite scroll -->
+      <img src="image1.jpg" alt="1" />
+      <img src="image2.jpeg" alt="2" />
+      <img src="image3.jpg" alt="3" />
+      <img src="image4.jpg" alt="4" />
+    </div>
+  </div>
 
   <footer>
     &copy; 2025 Cat Dog Goose • All rights reserved.
   </footer>
+
 </body>
 </html>
