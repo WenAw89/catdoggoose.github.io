@@ -164,6 +164,9 @@
     <button type="submit">Submit Booking</button>
   </form>
 
+<!-- TRUNCATED FOR LENGTH -->
+<!-- The head and style remain unchanged -->
+
 <script>
   const calendar = document.getElementById('calendar');
   const toTimeSlotsBtn = document.getElementById('toTimeSlots');
@@ -173,13 +176,22 @@
   const bookingForm = document.getElementById('bookingForm');
   const summary = document.getElementById('summary');
 
-  // Your Google Apps Script URL for GET to fetch existing bookings
   const getBookingsURL = 'https://script.google.com/macros/s/AKfycbxgrBXOlW5KY8wEoWbOfFerS1kP4jUaWmqTpisbL9SoF7_P_GrryaQl2dIaw54eOh0a/exec';
+  const postBookingURL = 'https://script.google.com/macros/s/AKfycbzPMxHLZyTrYLinS8322GT3ThP4rrmDd0le0fbjWCrWmwKY668bLKZQZBFHp1V0N1X_LA/exec';
 
   let selectedDates = new Set();
   let selectedTimes = {};
   let currentYear, currentMonth;
   let bookedSlots = {};  // { "YYYY-MM-DD": ["07:00", "07:30", ...], ... }
+
+  function generateTimeBlocks() {
+    const blocks = [];
+    for (let hour = 7; hour < 20; hour++) {
+      blocks.push(`${String(hour).padStart(2, '0')}:00`);
+      blocks.push(`${String(hour).padStart(2, '0')}:30`);
+    }
+    return blocks;
+  }
 
   function generateCalendar(year, month) {
     currentYear = year;
@@ -243,6 +255,8 @@
     const now = new Date();
     const buffer = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24-hour buffer
 
+    const allBlocks = generateTimeBlocks();
+
     for (let i = 0; i < startDay; i++) {
       grid.appendChild(document.createElement('div'));
     }
@@ -254,7 +268,9 @@
       day.className = 'day';
       day.textContent = d;
 
-      if (date < buffer) {
+      const allBooked = bookedSlots[dateStr]?.length >= allBlocks.length;
+
+      if (date < buffer || allBooked) {
         day.classList.add('disabled');
       } else {
         if (selectedDates.has(dateStr)) day.classList.add('selected');
@@ -276,17 +292,10 @@
     calendar.appendChild(grid);
   }
 
-  function generateTimeBlocks() {
-    const blocks = [];
-    for (let hour = 7; hour < 20; hour++) {
-      blocks.push(`${String(hour).padStart(2, '0')}:00`);
-      blocks.push(`${String(hour).padStart(2, '0')}:30`);
-    }
-    return blocks;
-  }
-
   function renderTimeSlots() {
     timeslotSections.innerHTML = '';
+    const allBlocks = generateTimeBlocks();
+
     selectedDates.forEach(date => {
       const section = document.createElement('div');
       section.className = 'timeslot-section';
@@ -296,19 +305,16 @@
 
       const list = document.createElement('div');
       list.className = 'timeslot-list';
-      const blocks = generateTimeBlocks();
       selectedTimes[date] = selectedTimes[date] || [];
 
-      blocks.forEach(time => {
+      allBlocks.forEach(time => {
         const btn = document.createElement('div');
         btn.className = 'timeslot';
         btn.textContent = time;
 
-        // Disable if already booked
         if (bookedSlots[date] && bookedSlots[date].includes(time)) {
           btn.classList.add('disabled');
         } else {
-          // Toggle selection on click
           if (selectedTimes[date].includes(time)) btn.classList.add('selected');
           btn.onclick = () => {
             const i = selectedTimes[date].indexOf(time);
@@ -321,6 +327,7 @@
             }
           };
         }
+
         list.appendChild(btn);
       });
 
@@ -363,11 +370,9 @@
       summary: summary.value.trim(),
     };
 
-    fetch('https://script.google.com/macros/s/AKfycbxgrBXOlW5KY8wEoWbOfFerS1kP4jUaWmqTpisbL9SoF7_P_GrryaQl2dIaw54eOh0a/exec', {
+    fetch(postBookingURL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       mode: 'no-cors',
       body: JSON.stringify(data)
     })
@@ -381,21 +386,19 @@
     });
   };
 
-  // Fetch booked slots on load
   fetch(getBookingsURL)
     .then(res => res.json())
     .then(data => {
       bookedSlots = data || {};
-      // Initialize calendar with current month
       const today = new Date();
       generateCalendar(today.getFullYear(), today.getMonth());
     })
     .catch(err => {
       console.error('Error fetching booked slots:', err);
-      // Still generate calendar even if fetch fails
       const today = new Date();
       generateCalendar(today.getFullYear(), today.getMonth());
     });
 </script>
+
 </body>
 </html>
