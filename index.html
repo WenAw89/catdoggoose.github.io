@@ -17,7 +17,7 @@
     header {
       background: #007aff;
       color: white;
-      padding: 1rem;
+      padding: 1.5rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -36,7 +36,7 @@
 
     .logo-title h1 {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
     }
 
@@ -49,6 +49,19 @@
       margin: 0 1rem;
       text-decoration: none;
       font-weight: 600;
+    }
+
+    .collage-container {
+      text-align: center;
+      background-color: #f8f9fb;
+      padding: 2rem 1rem;
+    }
+
+    .collage-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
 
     .hero {
@@ -68,19 +81,6 @@
       margin: 0 auto;
     }
 
- .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 8px;
-      padding: 1rem;
-    }
-    .gallery img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 6px;
-    }
-    
     .rates {
       background-color: #f9f9fb;
       padding: 2rem 1rem;
@@ -145,6 +145,11 @@
     }
 
     @media (max-width: 768px) {
+      .logo-title {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
       .logo-title h1 {
         font-size: 1.5rem;
       }
@@ -175,16 +180,18 @@
     </nav>
   </header>
 
-  <div class="gallery">
-    <!-- Replace src with actual images -->
-    <img src="mergeCollage.png" alt="Happypets">
+  <!-- Collage section -->
+  <div class="collage-container">
+    <img src="mergeCollage.png" alt="Happy Pets Collage" />
   </div>
 
+  <!-- Hero section -->
   <div class="hero">
     <h2>Give your pet a vacation!</h2>
     <p>If you have any questions or concerns, please reach out. We will get back to you soon!</p>
   </div>
 
+  <!-- Rates section -->
   <div class="rates">
     <h2>Rates</h2>
     <ul>
@@ -196,6 +203,7 @@
     </ul>
   </div>
 
+  <!-- Contact -->
   <div class="contact">
     <p>
       Send us an <a href="mailto:catdoggoose01@gmail.com" style="color: #007BFF; text-decoration: none;">email</a>,
@@ -203,10 +211,10 @@
     </p>
   </div>
 
- <!-- Carousel -->
+  <!-- Carousel -->
   <div class="carousel-container">
     <div class="carousel-track">
-      <!-- Images - can duplicate to ensure looping -->
+      <!-- Example images for continuous scroll -->
       <img src="image1.jpg" alt="1" />
       <img src="image2.jpeg" alt="2" />
       <img src="image3.jpg" alt="3" />
@@ -229,7 +237,7 @@
       <img src="image20.jpg" alt="20" />
       <img src="image21.jpg" alt="21" />
 
-      <!-- Duplicate for infinite scroll -->
+      <!-- Duplicates for smooth scroll -->
       <img src="image1.jpg" alt="1" />
       <img src="image2.jpeg" alt="2" />
       <img src="image3.jpg" alt="3" />
@@ -253,8 +261,6 @@
       <img src="image21.jpg" alt="21" />
     </div>
   </div>
-
-
 
   <footer>
     &copy; 2025 Cat Dog Goose • All rights reserved.
