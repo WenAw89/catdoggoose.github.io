@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cat Dog Goose - Pet Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #333;
+    }
+
+    header {
+      background: #007aff;
+      color: white;
+      padding: 1.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-title img {
+      height: 120px;
+      margin-right: 1rem;
+    }
+
+    .logo-title h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      font-family: 'Pacifico', cursive;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
+      display: inline-block;
+      background-color: #ffffff;
+      color: #007aff;
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 25px;
+      transition: background-color 0.3s, color 0.3s;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    nav a:hover {
+      background-color: #005bb5;
+      color: white;
+    }
+
+    .collage-container {
+      text-align: center;
+      background-color: #f8f9fb;
+      padding: 2rem 1rem;
+    }
+
+    .collage-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #222;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .rates {
+      background-color: #f9f9fb;
+      padding: 2rem 1rem;
+    }
+
+    .rates h2 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 1rem;
+    }
+
+    .rates ul {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+    }
+
+    .rates li {
+      margin-bottom: 0.75rem;
+    }
+
+    .contact {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 1.1rem;
+    }
+
+    .carousel-container {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .carousel-track {
+      display: flex;
+      animation: scroll 60s linear infinite;
+    }
+
+    .carousel-track img {
+      width: 120px;
+      flex-shrink: 0;
+      object-fit: cover;
+      padding: 6px;
+      background-color: white;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    footer {
+      background: #f0f8ff;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      .logo-title {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo-title h1 {
+        font-size: 2rem;
+      }
+
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        text-align: center;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-title">
+      <img src="catdoggoose.png" alt="Cat Dog Goose Logo" />
+      <h1>Cat, Dog, Goose</h1>
+    </div>
+    <nav>
+      <a href="/dropin.html">Book Drop‑In Visit</a>
+      <a href="/housesitting.html">Book House Sitting</a>
+    </nav>
+  </header>
+
+  <!-- Collage section -->
+  <div class="collage-container">
+    <img src="collagevFin.png" alt="Happy Pets Collage" />
+  </div>
+
+  <!-- Rates section -->
+  <div class="rates">
+    <h2>Rates</h2>
+    <ul>
+      <li><strong>Meet and Greet:</strong> Free</li>
+      <li><strong>Drop-in Visits (dogs and/or mixed pets):</strong> $25 first pet, +$10 per additional pet</li>
+      <li><strong>Drop-in Visits (cats only):</strong> $20 first cat, +$10 per additional cat</li>
+      <li><strong>House-sitting:</strong> $65 first pet, +$20 per additional pet</li>
+      <li><strong>Constant Overnight Care:</strong> $140 per night</li>
+    </ul>
+  </div>
+
+  <!-- Hero section -->
+  <div class="hero">
+    <h2>Give your pet a vacation!</h2>
+    <p>If you have any questions or concerns, please reach out. We will get back to you soon!</p>
+  </div>
+  
+  <!-- Contact -->
+  <div class="contact">
+    <p>
+      Send us an <a href="mailto:catdoggoose01@gmail.com" style="color: #007BFF; text-decoration: none;">email</a>,
+      text, or call ‪(336) 525-1338
+    </p>
+  </div>
+
+  <!-- Carousel -->
+  <div class="carousel-container">
+    <div class="carousel-track">
+      <!-- Images and duplicates -->
+      <!-- [Same images as before — unchanged] -->
+      <!-- Include your images from image1.jpg to image21.jpg + duplicates for smooth scroll -->
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Cat Dog Goose • All rights reserved.
+  </footer>
+
+</body>
+</html>
