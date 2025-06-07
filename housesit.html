@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>House Sitting Booking</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin: 20px 0;
+    }
+    .day {
+      background: white;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .day:hover {
+      background-color: #e0f7fa;
+    }
+    .disabled {
+      color: #ccc;
+      pointer-events: none;
+      background-color: #eee;
+    }
+    .selected {
+      background-color: #4caf50;
+      color: white;
+    }
+    .in-range {
+      background-color: #a5d6a7;
+      color: white;
+    }
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #4caf50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .hidden {
+      display: none;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+    }
+    label, input, select, textarea {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>House Sitting Booking</h1>
+
+  <div id="loader" class="loader hidden"></div>
+
+  <div>
+    <button id="prevMonth">&lt;</button>
+    <span id="monthLabel"></span>
+    <button id="nextMonth">&gt;</button>
+  </div>
+  <div class="calendar" id="calendarDays"></div>
+
+  <form id="bookingForm">
+    <label for="Name">Name:</label>
+    <input type="text" id="Name" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" required />
+
+    <label for="location">Location:</label>
+    <input type="text" id="location" required />
+
+    <label for="phone">Phone:</label>
+    <input type="tel" id="phone" required />
+
+    <label for="pets">Pets:</label>
+    <textarea id="pets" required></textarea>
+
+    <label for="startTime">Start Time:</label>
+    <input type="time" id="startTime" required />
+
+    <label for="endTime">End Time:</label>
+    <input type="time" id="endTime" required />
+
+    <button type="button" id="submitBtn">Submit</button>
+  </form>
+
+  <script>
+    const calendarDays = document.getElementById("calendarDays");
+    const monthLabel = document.getElementById("monthLabel");
+    const loader = document.getElementById("loader");
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let rangeStart = null;
+    let rangeEnd = null;
+    let bookedDates = [];
+    const oneDayBuffer = new Date();
+    oneDayBuffer.setDate(oneDayBuffer.getDate() + 1);
+
+    document.getElementById("prevMonth").onclick = () => {
+      if (currentMonth === 0) {
+        currentMonth = 11;
+        currentYear--;
+      } else {
+        currentMonth--;
+      }
+      renderCalendar(currentMonth, currentYear);
+    };
+
+    document.getElementById("nextMonth").onclick = () => {
+      if (currentMonth === 11) {
+        currentMonth = 0;
+        currentYear++;
+      } else {
+        currentMonth++;
+      }
+      renderCalendar(currentMonth, currentYear);
+    };
+
+    function handleRangeSelect(dateStr) {
+      if (!rangeStart || (rangeStart && rangeEnd)) {
+        rangeStart = dateStr;
+        rangeEnd = null;
+      } else {
+        const start = new Date(rangeStart);
+        const end = new Date(dateStr);
+        if (end < start) {
+          rangeStart = dateStr;
+        } else {
+          rangeEnd = dateStr;
+        }
+      }
+      renderCalendar(currentMonth, currentYear);
+    }
+
+    function renderCalendar(month, year) {
+      loader.classList.remove("hidden");
+      setTimeout(() => {
+        calendarDays.innerHTML = "";
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        monthLabel.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+
+        for (let i = 0; i < firstDay; i++) {
+          calendarDays.innerHTML += `<div></div>`;
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(year, month, d);
+          const dateStr = date.toISOString().split('T')[0];
+          const isPastBuffer = date < oneDayBuffer;
+          const div = document.createElement("div");
+          div.textContent = d;
+          div.className = "day";
+          if (isPastBuffer || bookedDates.includes(dateStr)) {
+            div.classList.add("disabled");
+          } else {
+            if (rangeStart && dateStr === rangeStart) div.classList.add("selected");
+            if (rangeEnd && dateStr === rangeEnd) div.classList.add("selected");
+            if (rangeStart && rangeEnd && date >= new Date(rangeStart) && date <= new Date(rangeEnd)) {
+              div.classList.add("in-range");
+            }
+            div.addEventListener("click", () => handleRangeSelect(dateStr));
+          }
+          calendarDays.appendChild(div);
+        }
+        loader.classList.add("hidden");
+      }, 0);
+    }
+
+    fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec")
+      .then(res => res.json())
+      .then(data => {
+        bookedDates = data;
+        renderCalendar(currentMonth, currentYear);
+      })
+      .catch(err => {
+        console.error("Error fetching booked dates:", err);
+        renderCalendar(currentMonth, currentYear);
+      });
+
+    document.getElementById("submitBtn").onclick = () => {
+      const Name = document.getElementById("Name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const pets = document.getElementById("pets").value.trim();
+      const startTime = document.getElementById("startTime").value;
+      const endTime = document.getElementById("endTime").value;
+
+      if (!rangeStart || !rangeEnd || !Name || !email || !location || !phone || !pets || !startTime || !endTime) {
+        alert("Please complete all fields and select a date range.");
+        return;
+      }
+
+      const data = {
+        Name,
+        Email: email,
+        Location: location,
+        Phone: phone,
+        Pets: pets,
+        StartDate: rangeStart,
+        EndDate: rangeEnd,
+        StartTime: startTime,
+        EndTime: endTime
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        alert("Booking submitted successfully!");
+        document.getElementById("bookingForm").reset();
+        rangeStart = null;
+        rangeEnd = null;
+        renderCalendar(currentMonth, currentYear);
+      })
+      .catch((error) => {
+        console.error("Error submitting booking:", error);
+        alert("There was an error submitting your booking. Please try again.");
+      });
+    };
+  </script>
+</body>
+</html>
