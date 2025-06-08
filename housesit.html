@@ -259,7 +259,7 @@
         return;
       }
 
-      fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec", {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
@@ -279,7 +279,7 @@
     };
 
     loadingSpinner.style.display = 'block';
-    fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec")
+    fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec")
       .then(res => res.json())
       .then(data => {
         bookedDates = data;
