@@ -2,122 +2,224 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>House Sitting Booking</title>
   <style>
+    :root {
+      --primary: #007aff;
+      --accent: #28a745;
+      --disabled: #ccc;
+      --text-dark: #222;
+      --bg-light: #f9f9fb;
+    }
     body {
-      font-family: sans-serif;
-      padding: 20px;
-      background-color: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      max-width: 700px;
+      margin: auto;
+      padding: 1rem;
+    }
+    h2 {
+      text-align: center;
     }
     .calendar {
+      margin-top: 1rem;
+    }
+    .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      margin: 20px 0;
+      gap: 6px;
+      margin-top: 0.5rem;
     }
     .day {
       background: white;
+      border-radius: 10px;
       padding: 10px;
       text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
       cursor: pointer;
-      border-radius: 4px;
+      font-size: 0.9rem;
     }
     .day:hover {
-      background-color: #e0f7fa;
+      background-color: #e8f4ff;
     }
-    .disabled {
-      color: #ccc;
-      pointer-events: none;
+    .day.selected {
+      background-color: var(--primary);
+      color: white;
+      font-weight: bold;
+    }
+    .day.in-range {
+      background-color: var(--accent);
+      color: white;
+    }
+    .day.disabled {
       background-color: #eee;
+      color: #aaa;
+      pointer-events: none;
     }
-    .selected {
-      background-color: #4caf50;
+    .nav-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .nav-button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .month-label {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+    }
+    input, select, textarea {
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--primary);
       color: white;
-    }
-    .in-range {
-      background-color: #a5d6a7;
-      color: white;
-    }
-    .loader {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #4caf50;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 10px auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      cursor: pointer;
     }
     .hidden {
       display: none;
     }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 6px;
+    #loadingSpinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid var(--primary);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      animation: spin 1s linear infinite;
+      z-index: 9999;
     }
-    label, input, select, textarea {
-      display: block;
-      margin-bottom: 10px;
-      width: 100%;
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <h1>House Sitting Booking</h1>
+  <h2>Book House Sitting</h2>
+  <div id="loadingSpinner"></div>
 
-  <div id="loader" class="loader hidden"></div>
-
-  <div>
-    <button id="prevMonth">&lt;</button>
-    <span id="monthLabel"></span>
-    <button id="nextMonth">&gt;</button>
+  <div class="calendar">
+    <div class="nav-wrapper">
+      <button id="prevMonth" class="nav-button">←</button>
+      <div id="monthLabel" class="month-label"></div>
+      <button id="nextMonth" class="nav-button">→</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
   </div>
-  <div class="calendar" id="calendarDays"></div>
 
   <form id="bookingForm">
-    <label for="Name">Name:</label>
-    <input type="text" id="Name" required />
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" required />
-
-    <label for="location">Location:</label>
-    <input type="text" id="location" required />
-
-    <label for="phone">Phone:</label>
-    <input type="tel" id="phone" required />
-
-    <label for="pets">Pets:</label>
-    <textarea id="pets" required></textarea>
-
-    <label for="startTime">Start Time:</label>
-    <input type="time" id="startTime" required />
-
-    <label for="endTime">End Time:</label>
-    <input type="time" id="endTime" required />
-
-    <button type="button" id="submitBtn">Submit</button>
+    <input type="text" id="name" placeholder="Full Name *" required />
+    <input type="email" id="email" placeholder="Email *" required />
+    <input type="text" id="location" placeholder="Location *" required />
+    <input type="tel" id="phone" placeholder="Phone Number *" required />
+    <textarea id="pets" placeholder="Tell me about your pets..." rows="3" required></textarea>
+    <label>Select time range:</label>
+    <select id="startTime" required>
+      <option value="">Start Time</option>
+      <option>08:00</option><option>09:00</option><option>10:00</option>
+      <option>11:00</option><option>12:00</option><option>13:00</option>
+      <option>14:00</option><option>15:00</option><option>16:00</option>
+      <option>17:00</option><option>18:00</option>
+    </select>
+    <select id="endTime" required>
+      <option value="">End Time</option>
+      <option>08:00</option><option>09:00</option><option>10:00</option>
+      <option>11:00</option><option>12:00</option><option>13:00</option>
+      <option>14:00</option><option>15:00</option><option>16:00</option>
+      <option>17:00</option><option>18:00</option>
+    </select>
+    <button type="submit">Submit Booking</button>
   </form>
 
   <script>
-    const calendarDays = document.getElementById("calendarDays");
-    const monthLabel = document.getElementById("monthLabel");
-    const loader = document.getElementById("loader");
-
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const calendarGrid = document.getElementById('calendarGrid');
+    const monthLabel = document.getElementById('monthLabel');
     let currentMonth = new Date().getMonth();
     let currentYear = new Date().getFullYear();
     let rangeStart = null;
     let rangeEnd = null;
     let bookedDates = [];
-    const oneDayBuffer = new Date();
-    oneDayBuffer.setDate(oneDayBuffer.getDate() + 1);
+    const buffer = new Date();
+    buffer.setDate(buffer.getDate() + 1);
 
-    document.getElementById("prevMonth").onclick = () => {
+    function renderCalendar(month, year) {
+      calendarGrid.innerHTML = '';
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      monthLabel.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+
+      for (let i = 0; i < firstDay; i++) {
+        calendarGrid.appendChild(document.createElement('div'));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        const dateStr = date.toISOString().split('T')[0];
+        const div = document.createElement('div');
+        div.className = 'day';
+        div.textContent = d;
+
+        if (date < buffer || bookedDates.includes(dateStr)) {
+          div.classList.add('disabled');
+        } else {
+          if (rangeStart && dateStr === rangeStart) div.classList.add('selected');
+          if (rangeEnd && dateStr === rangeEnd) div.classList.add('selected');
+          if (rangeStart && rangeEnd && date >= new Date(rangeStart) && date <= new Date(rangeEnd)) {
+            div.classList.add('in-range');
+          }
+
+          div.onclick = () => {
+            if (!rangeStart || (rangeStart && rangeEnd)) {
+              rangeStart = dateStr;
+              rangeEnd = null;
+            } else {
+              const start = new Date(rangeStart);
+              const end = new Date(dateStr);
+              if (end < start) {
+                rangeStart = dateStr;
+              } else {
+                rangeEnd = dateStr;
+              }
+            }
+            renderCalendar(currentMonth, currentYear);
+          };
+        }
+
+        calendarGrid.appendChild(div);
+      }
+    }
+
+    document.getElementById('prevMonth').onclick = () => {
       if (currentMonth === 0) {
         currentMonth = 11;
         currentYear--;
@@ -127,7 +229,7 @@
       renderCalendar(currentMonth, currentYear);
     };
 
-    document.getElementById("nextMonth").onclick = () => {
+    document.getElementById('nextMonth').onclick = () => {
       if (currentMonth === 11) {
         currentMonth = 0;
         currentYear++;
@@ -137,112 +239,56 @@
       renderCalendar(currentMonth, currentYear);
     };
 
-    function handleRangeSelect(dateStr) {
-      if (!rangeStart || (rangeStart && rangeEnd)) {
-        rangeStart = dateStr;
-        rangeEnd = null;
-      } else {
-        const start = new Date(rangeStart);
-        const end = new Date(dateStr);
-        if (end < start) {
-          rangeStart = dateStr;
-        } else {
-          rangeEnd = dateStr;
-        }
-      }
-      renderCalendar(currentMonth, currentYear);
-    }
+    document.getElementById('bookingForm').onsubmit = (e) => {
+      e.preventDefault();
 
-    function renderCalendar(month, year) {
-      loader.classList.remove("hidden");
-      setTimeout(() => {
-        calendarDays.innerHTML = "";
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        monthLabel.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+      const data = {
+        Name: document.getElementById('name').value.trim(),
+        Email: document.getElementById('email').value.trim(),
+        Location: document.getElementById('location').value.trim(),
+        Phone: document.getElementById('phone').value.trim(),
+        Pets: document.getElementById('pets').value.trim(),
+        StartTime: document.getElementById('startTime').value,
+        EndTime: document.getElementById('endTime').value,
+        StartDate: rangeStart,
+        EndDate: rangeEnd
+      };
 
-        for (let i = 0; i < firstDay; i++) {
-          calendarDays.innerHTML += `<div></div>`;
-        }
-
-        for (let d = 1; d <= daysInMonth; d++) {
-          const date = new Date(year, month, d);
-          const dateStr = date.toISOString().split('T')[0];
-          const isPastBuffer = date < oneDayBuffer;
-          const div = document.createElement("div");
-          div.textContent = d;
-          div.className = "day";
-          if (isPastBuffer || bookedDates.includes(dateStr)) {
-            div.classList.add("disabled");
-          } else {
-            if (rangeStart && dateStr === rangeStart) div.classList.add("selected");
-            if (rangeEnd && dateStr === rangeEnd) div.classList.add("selected");
-            if (rangeStart && rangeEnd && date >= new Date(rangeStart) && date <= new Date(rangeEnd)) {
-              div.classList.add("in-range");
-            }
-            div.addEventListener("click", () => handleRangeSelect(dateStr));
-          }
-          calendarDays.appendChild(div);
-        }
-        loader.classList.add("hidden");
-      }, 0);
-    }
-
-    fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec")
-      .then(res => res.json())
-      .then(data => {
-        bookedDates = data;
-        renderCalendar(currentMonth, currentYear);
-      })
-      .catch(err => {
-        console.error("Error fetching booked dates:", err);
-        renderCalendar(currentMonth, currentYear);
-      });
-
-    document.getElementById("submitBtn").onclick = () => {
-      const Name = document.getElementById("Name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const location = document.getElementById("location").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const pets = document.getElementById("pets").value.trim();
-      const startTime = document.getElementById("startTime").value;
-      const endTime = document.getElementById("endTime").value;
-
-      if (!rangeStart || !rangeEnd || !Name || !email || !location || !phone || !pets || !startTime || !endTime) {
-        alert("Please complete all fields and select a date range.");
+      if (!rangeStart || !rangeEnd) {
+        alert("Please select a valid date range.");
         return;
       }
 
-      const data = {
-        Name,
-        Email: email,
-        Location: location,
-        Phone: phone,
-        Pets: pets,
-        StartDate: rangeStart,
-        EndDate: rangeEnd,
-        StartTime: startTime,
-        EndTime: endTime
-      };
-
       fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
       .then(() => {
-        alert("Booking submitted successfully!");
-        document.getElementById("bookingForm").reset();
+        alert('Booking submitted successfully!');
+        document.getElementById('bookingForm').reset();
         rangeStart = null;
         rangeEnd = null;
         renderCalendar(currentMonth, currentYear);
       })
-      .catch((error) => {
-        console.error("Error submitting booking:", error);
-        alert("There was an error submitting your booking. Please try again.");
+      .catch(err => {
+        console.error('Submission error:', err);
+        alert('There was an error submitting the form. Please try again.');
       });
     };
+
+    loadingSpinner.style.display = 'block';
+    fetch("https://script.google.com/macros/s/AKfycbxSE2qy-y0CRFvylyKarVIaIBXK4HF6xvphwan7cWWwr654gHK8bmddAFPeCSdxxpDH/exec")
+      .then(res => res.json())
+      .then(data => {
+        bookedDates = data;
+      })
+      .catch(err => console.error("Error fetching booked dates:", err))
+      .finally(() => {
+        renderCalendar(currentMonth, currentYear);
+        loadingSpinner.style.display = 'none';
+      });
   </script>
 </body>
 </html>
