@@ -242,18 +242,19 @@
     document.getElementById('bookingForm').onsubmit = (e) => {
       e.preventDefault();
 
-      const data = {
-        Name: document.getElementById('name').value.trim(),
-        Email: document.getElementById('email').value.trim(),
-        Location: document.getElementById('location').value.trim(),
-        Phone: document.getElementById('phone').value.trim(),
-        Pets: document.getElementById('pets').value.trim(),
-        StartTime: document.getElementById('startTime').value,
-        EndTime: document.getElementById('endTime').value,
-        StartDate: rangeStart,
-        EndDate: rangeEnd
-      };
+    const data = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      address: document.getElementById('location').value.trim(),
+      pets: document.getElementById('pets').value.trim(),
+      starttime: document.getElementById('startTime').value,
+      endTime: document.getElementById('endTime').value,
+      rangeStart: rangeStart,
+      rangeEnd: rangeEnd
+    };
 
+  
       if (!rangeStart || !rangeEnd) {
         alert("Please select a valid date range.");
         return;
