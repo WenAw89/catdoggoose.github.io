@@ -267,7 +267,7 @@ document.getElementById('bookingForm').onsubmit = (e) => {
     return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbzBpo3iWn5alCGPAgEfIBRq-GaK6mxksgjMQfSaLvd2LsSs9c9cwjY6DU0AX-pkd0SAgA/exec", {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
@@ -287,7 +287,7 @@ document.getElementById('bookingForm').onsubmit = (e) => {
 };
 
     loadingSpinner.style.display = 'block';
-    fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec")
+    fetch("https://script.google.com/macros/s/AKfycbzBpo3iWn5alCGPAgEfIBRq-GaK6mxksgjMQfSaLvd2LsSs9c9cwjY6DU0AX-pkd0SAgA/exec")
       .then(res => res.json())
       .then(data => {
         bookedDates = data;
