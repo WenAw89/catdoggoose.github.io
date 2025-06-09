@@ -172,51 +172,53 @@
     const buffer = new Date();
     buffer.setDate(buffer.getDate() + 1);
 
-    function renderCalendar(month, year) {
-      calendarGrid.innerHTML = '';
-      const firstDay = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      monthLabel.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+function renderCalendar(month, year) {
+  calendarGrid.innerHTML = '';
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  monthLabel.textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
 
-      for (let i = 0; i < firstDay; i++) {
-        calendarGrid.appendChild(document.createElement('div'));
+  for (let i = 0; i < firstDay; i++) {
+    calendarGrid.appendChild(document.createElement('div'));
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dateStr = date.toISOString().split('T')[0];
+    const div = document.createElement('div');
+    div.className = 'day';
+    div.textContent = d;
+
+    if (date < buffer) {
+      div.classList.add('disabled');
+    } else {
+      if (rangeStart && dateStr === rangeStart) div.classList.add('selected');
+      if (rangeEnd && dateStr === rangeEnd) div.classList.add('selected');
+      if (rangeStart && rangeEnd && date >= new Date(rangeStart) && date <= new Date(rangeEnd)) {
+        div.classList.add('in-range');
       }
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const date = new Date(year, month, d);
-        const dateStr = date.toISOString().split('T')[0];
-        const div = document.createElement('div');
-        div.className = 'day';
-        div.textContent = d;
-
-        if (date < buffer || bookedDates.includes(dateStr)) {
-          div.classList.add('disabled');
+      div.onclick = () => {
+        if (!rangeStart || (rangeStart && rangeEnd)) {
+          rangeStart = dateStr;
+          rangeEnd = null;
         } else {
-          if (rangeStart && dateStr === rangeStart) div.classList.add('selected');
-          if (rangeEnd && dateStr === rangeEnd) div.classList.add('selected');
-          if (rangeStart && rangeEnd && date >= new Date(rangeStart) && date <= new Date(rangeEnd)) {
-            div.classList.add('in-range');
+          const start = new Date(rangeStart);
+          const end = new Date(dateStr);
+          if (end < start) {
+            rangeStart = dateStr;
+          } else {
+            rangeEnd = dateStr;
           }
-
-          div.onclick = () => {
-            if (!rangeStart || (rangeStart && rangeEnd)) {
-              rangeStart = dateStr;
-              rangeEnd = null;
-            } else {
-              const start = new Date(rangeStart);
-              const end = new Date(dateStr);
-              if (end < start) {
-                rangeStart = dateStr;
-              } else {
-                rangeEnd = dateStr;
-              }
-            }
-            renderCalendar(currentMonth, currentYear);
-          };
         }
+        renderCalendar(currentMonth, currentYear);
+      };
+    }
 
-        calendarGrid.appendChild(div);
-      }
+    calendarGrid.appendChild(div);
+  }
+}
+
     }
 
     document.getElementById('prevMonth').onclick = () => {
