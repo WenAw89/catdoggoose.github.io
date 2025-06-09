@@ -137,29 +137,48 @@
   </div>
 
   <form id="bookingForm">
-    <input type="text" id="name" placeholder="Full Name *" required />
-    <input type="email" id="email" placeholder="Email *" required />
-    <input type="text" id="location" placeholder="Location *" required />
-    <input type="tel" id="phone" placeholder="Phone Number *" required />
-    <textarea id="pets" placeholder="Tell me about your pets..." rows="3" required></textarea>
-    <label>Select time range:</label>
-    <select id="startTime" required>
-      <option value="">Start Time</option>
-      <option>08:00</option><option>09:00</option><option>10:00</option>
-      <option>11:00</option><option>12:00</option><option>13:00</option>
-      <option>14:00</option><option>15:00</option><option>16:00</option>
-      <option>17:00</option><option>18:00</option>
-    </select>
-    <select id="endTime" required>
-      <option value="">End Time</option>
-      <option>08:00</option><option>09:00</option><option>10:00</option>
-      <option>11:00</option><option>12:00</option><option>13:00</option>
-      <option>14:00</option><option>15:00</option><option>16:00</option>
-      <option>17:00</option><option>18:00</option>
-    </select>
-    <button type="submit">Submit Booking</button>
-  </form>
+    <label for="name">Full Name</label>
+    <input type="text" id="name" required />
 
+    <label for="email">Email</label>
+    <input type="email" id="email" required />
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" required />
+
+    <label for="address">Address</label>
+    <input type="text" id="address" required />
+
+    <label for="pets">Pet Details</label>
+    <textarea id="pets" rows="3" required></textarea>
+
+    <label for="starttime">Start Time</label>
+    <select id="starttime" required>
+      <option value="">-- Select --</option>
+      <option>08:00</option><option>09:00</option><option>10:00</option>
+      <option>11:00</option><option>12:00</option><option>13:00</option>
+      <option>14:00</option><option>15:00</option><option>16:00</option>
+      <option>17:00</option><option>18:00</option>
+    </select>
+
+    <label for="endtime">End Time</label>
+    <select id="endtime" required>
+      <option value="">-- Select --</option>
+      <option>08:00</option><option>09:00</option><option>10:00</option>
+      <option>11:00</option><option>12:00</option><option>13:00</option>
+      <option>14:00</option><option>15:00</option><option>16:00</option>
+      <option>17:00</option><option>18:00</option>
+    </select>
+
+    <label for="startdate">Start Date</label>
+    <input type="date" id="startdate" required />
+
+    <label for="enddate">End Date</label>
+    <input type="date" id="enddate" required />
+
+    <button type="submit">Submit</button>
+  </form>
+    
  <script>
     const loadingSpinner = document.getElementById('loadingSpinner');
     const calendarGrid = document.getElementById('calendarGrid');
@@ -239,27 +258,34 @@
       renderCalendar(currentMonth, currentYear);
     };
 
-    document.getElementById('bookingForm').onsubmit = (e) => {
+    document.getElementById('bookingForm').onsubmit = function(e) {
       e.preventDefault();
 
-      if (!rangeStart || !rangeEnd) {
-        alert("Please select a valid date range.");
-        return;
-      }
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const pets = document.getElementById('pets').value.trim();
+      const starttime = document.getElementById('starttime').value;
+      const endtime = document.getElementById('endtime').value;
+      const startdate = document.getElementById('startdate').value;
+      const enddate = document.getElementById('enddate').value;
+
+      const summary = `${startdate} to ${enddate}`;
 
       const data = {
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        address: document.getElementById('location').value.trim(),
-        pets: document.getElementById('pets').value.trim(),
-        starttime: document.getElementById('startTime').value,
-        endTime: document.getElementById('endTime').value,
-        rangeStart: rangeStart,
-        rangeEnd: rangeEnd
+        name,
+        email,
+        phone,
+        address,
+        pets,
+        starttime,
+        endtime,
+        summary
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec", {
+
+      fetch("https://script.google.com/macros/s/AKfycbyWcyIGkSY5XjN1DY5XV0zjTbXpl7ZLnuOstZrW7D7TArqPAP4qhxhx1tA_3WiGYsQ_3g/exec", {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
@@ -279,7 +305,7 @@
     };
 
     loadingSpinner.style.display = 'block';
-    fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec")
+    fetch("https://script.google.com/macros/s/AKfycbyWcyIGkSY5XjN1DY5XV0zjTbXpl7ZLnuOstZrW7D7TArqPAP4qhxhx1tA_3WiGYsQ_3g/exec")
       .then(res => res.json())
       .then(data => {
         bookedDates = data;
