@@ -242,18 +242,12 @@
 document.getElementById('bookingForm').onsubmit = (e) => {
   e.preventDefault();
 
-  const startDate = rangeStart;
-  const endDate = rangeEnd;
+  const rangeStartFormatted = rangeStart;
+  const rangeEndFormatted = rangeEnd;
   const startTime = document.getElementById('startTime').value;
   const endTime = document.getElementById('endTime').value;
 
-  if (!startDate || !endDate) {
-    alert("Please select a valid date range.");
-    return;
-  }
-
-  // 👇 Generate the summary text
-  const summaryText = `Start: ${startDate} at ${startTime}\nEnd: ${endDate} at ${endTime}`;
+  const summaryText = `Start: ${rangeStartFormatted} at ${startTime}\nEnd: ${rangeEndFormatted} at ${endTime}`;
 
   const data = {
     Name: document.getElementById('name').value.trim(),
@@ -261,12 +255,17 @@ document.getElementById('bookingForm').onsubmit = (e) => {
     Location: document.getElementById('location').value.trim(),
     Phone: document.getElementById('phone').value.trim(),
     Pets: document.getElementById('pets').value.trim(),
+    StartDate: rangeStartFormatted,
     StartTime: startTime,
+    EndDate: rangeEndFormatted,
     EndTime: endTime,
-    StartDate: startDate,
-    EndDate: endDate,
-    Summary: summaryText  // 👈 Add to your submitted object
+    Summary: summaryText
   };
+
+  if (!rangeStart || !rangeEnd) {
+    alert("Please select a valid date range.");
+    return;
+  }
 
   fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec", {
     method: 'POST',
@@ -286,7 +285,6 @@ document.getElementById('bookingForm').onsubmit = (e) => {
     alert('There was an error submitting the form. Please try again.');
   });
 };
-
 
     loadingSpinner.style.display = 'block';
     fetch("https://script.google.com/macros/s/AKfycbzrHzu2ACpzLm0YljCI9xh_OICp3IFbFMGXtGCzFUMY8U7BsIC_79g44qc5itDJZy0KtA/exec")
