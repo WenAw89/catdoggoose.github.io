@@ -248,10 +248,7 @@
       })
       .then(() => {
         alert('Booking submitted successfully! You’ll receive an email confirmation once your reservation is reviewed and confirmed.');
-        document.getElementById('bookingForm').reset();
-        rangeStart = null;
-        rangeEnd = null;
-        renderCalendar(currentMonth, currentYear);
+        window.location.href = 'https://catdoggoose.com';
       })
       .catch(err => {
         console.error('Submission error:', err);
